@@ -20,6 +20,13 @@ class PersonEntityExtractor:
         print("NLP Model setup:", self.nlp.analyze_pipes())
 
     def get_all_people_details(self, person_info_request: PersonInfoRequest) -> PersonInfoResponse | CommonResponse:
+        """
+        Identify and sort by count all the people in the text document and create a list of places that
+        are associated with each of the person in the document.
+        Return any metadata fields sent in the initial request
+        :param person_info_request: PersonInfoRequest
+        :return: PersonInfoResponse | CommonResponse
+        """
         doc_text = self.fetch_text_from_url(person_info_request.url)
         if not isinstance(doc_text, str):
             return doc_text
@@ -45,7 +52,7 @@ class PersonEntityExtractor:
     @staticmethod
     def clean_text(text: str) -> str:
         """
-        Steps to clean the text returned by the URL
+        Basic steps to clean the text
         :param text:
         :return:
         """
@@ -55,10 +62,11 @@ class PersonEntityExtractor:
 
     def get_people_places_details(self, doc_text: str, lookup_location_by: int = 100) -> list[dict]:
         """
-        Method to extract person entities and locations that are around the person along with count of entities
+        Method to extract person entities and locations that are around the person along with
+        count of entities
         :param doc_text: str
         :param lookup_location_by: int
-        :return:
+        :return: list of people with their frequency and location details
         """
         spacy_doc = self.nlp(doc_text)
         token_spans = self.get_all_tokens(spacy_doc)
@@ -87,7 +95,7 @@ class PersonEntityExtractor:
         """
         Method to get list of tokens from the spacy doc object along with the token span
         :param spacy_doc:
-        :return:
+        :return: list of tokens with corresponding character span
         """
         token_spans = []
         prev_span = -1
@@ -99,6 +107,12 @@ class PersonEntityExtractor:
 
     @staticmethod
     def extract_person_location_entities(spacy_doc):
+        """
+        Method to extract 'PERSON' and 'GPE' (Geographical locations) from text using Spacy
+        :param spacy_doc:
+        :return: dict containing people name and their span tags,
+                dict containing locations and their span tags
+        """
         people_dict, location_dict = {}, {}
         for entity in spacy_doc.ents:
             if entity.label_ == 'PERSON':
@@ -116,6 +130,14 @@ class PersonEntityExtractor:
     @staticmethod
     def accumulate_locations_near_person(people_dict: dict, location_dict: dict, token_spans: list,
                                          lookup_location_by: int) -> dict:
+        """
+        Method to gather location mentioned around a person in the text along with it's frequency
+        :param people_dict:
+        :param location_dict:
+        :param token_spans:
+        :param lookup_location_by:
+        :return: dict containing people with location details
+        """
         for person, spans in people_dict.items():
             for person_span in spans['spans']:
                 search_start_span = -1

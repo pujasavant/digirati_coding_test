@@ -1,5 +1,12 @@
 from pydantic import BaseModel, Extra
 
+"""
+File containing BaseModel classes needed for Person Entity Extractor class's 
+API request and response.
+
+@author: Pooja Savant
+"""
+
 
 class PersonInfoRequest(BaseModel):
     class Config:

@@ -13,7 +13,8 @@ Main class with API routes
 """
 app = FastAPI(
     title="Digirati Entity Extraction POC",
-    description="API documentation of services incorporated in Digirati Entity Extraction POC\nAuthor: Pooja Savant",
+    description="API documentation of services incorporated in Digirati Entity Extraction POC" +
+                "<br>Author: Pooja Savant",
     version="0.0.1"
 )
 person_entity_extractor = PersonEntityExtractor()
