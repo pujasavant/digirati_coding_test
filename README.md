@@ -1,6 +1,6 @@
 # Digirati Coding Test
 
-### <b>Author: Pooja Savant</b>
+### Author: Pooja Savant
 
 Project to extract person names from the text extracted from the given URL and getting location mentioned near to the person's name in the text sorted by their frequency.
 
